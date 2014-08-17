@@ -64,10 +64,14 @@ DLL_LDFLAGS ?= $(LD_COMMON) -s -shared -Wl,--strip-all -Wl,--exclude-all-symbols
 	$(CP) $< $@
 	$(STRIP) -R .patch $@
 
+
 .dump-%: %
 	$(CP) $< $@
 	$(PETOOL) dump $@
 
+
+%.dat: %.bdat
+	$(PETOOL) pe2obj $< $@
 
 %.o: %.cpp
 	$(CXX)  $(CXXFLAGS) -c -o $@ $<
