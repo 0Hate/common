@@ -6,6 +6,7 @@ COMMON_DIR  ?= common
 
 CP          ?= copy
 RM          ?= rm -f
+AS          ?= as
 CC          ?= gcc
 CXX         ?= clang++
 STRIP       ?= strip
@@ -81,6 +82,9 @@ DLL_LDFLAGS ?= $(LD_COMMON) -s -shared -Wl,--strip-all -Wl,--exclude-all-symbols
 
 %.o: %.asm
 	$(NASM) $(NFLAGS)      -o $@ $<
+
+%.o: %.s
+	$(AS) $(ASFLAGS)       -o $@ $<
 
 %.o: %.rc
 	$(WINDRES) $(WFLAGS) $< $@
