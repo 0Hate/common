@@ -12,18 +12,19 @@ let
     };
   };  
 
-  game = {stdenv, nasm, petool}: stdenv.mkDerivation rec {
+  game = {lib, stdenv, nasm, petool}: stdenv.mkDerivation rec {
     inherit name;
     inherit version;
 
     nativeBuildInputs = [ nasm petool ];
     src = ./..;
-    preBuild = "makeFlagsArray="
-     + "(REV=${version}"
-     + "  CP=cp"
-     + "  CC=${stdenv.cross.config}-gcc"
-     + "  WINDRES=${stdenv.cross.config}-windres"
-     + ")";
+    preBuild = "makeFlagsArray=(" + lib.concatStringsSep " " [
+      "REV=${version}"
+      "CP=cp"
+      "CC=${stdenv.cross.config}-gcc"
+      "AS=${stdenv.cross.config}-as"
+      "WINDRES=${stdenv.cross.config}-windres"
+    ] + ")";
 
     enableParallelBuilding = true;
 
