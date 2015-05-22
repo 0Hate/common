@@ -39,3 +39,11 @@
         ".byte 0xE8"                            "\n\t" \
         ".long " #dst "-" #src " - 5"           "\n\t" \
     )
+
+#define SETDWORD(dst, value)                           \
+    asm (                                       "\n\t" \
+        ".section .patch,\"d0\";"               "\n\t" \
+        ".long " #dst ";"                       "\n\t" \
+        ".long 4;"                              "\n\t" \
+        ".long " #value ";"                     "\n\t" \
+    )

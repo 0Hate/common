@@ -86,49 +86,49 @@
 
         @CLEAR {(%1) + 5}, 0xCC, {(%2)}
         @HACK {(%1)}, {%4}
-		push ecx
-		push edx
-		push eax
-		push esi
+        push ecx
+        push edx
+        push eax
+        push esi
         %$end equ %2
-		%$argcount equ %3
+        %$argcount equ %3
     %endif
 %endmacro
 
 %macro @FINISHCALLC 0
     %ifctx __hack
-		
-		%ifctx __finishcallc
-			%error "can't nest finishcallcs"
-		%else
-			add esp, (%$argcount * 4)
-			pop esi
-			pop eax
-			pop edx
-			pop ecx
-			
-			%push __finishcallc
-		%endif
-	%else
+        
+        %ifctx __finishcallc
+            %error "can't nest finishcallcs"
+        %else
+            add esp, (%$argcount * 4)
+            pop esi
+            pop eax
+            pop edx
+            pop ecx
+            
+            %push __finishcallc
+        %endif
+    %else
         %error "no corrosponding `@CALLC'"
     %endif
 %endmacro
 
 %macro @ENDCALLC 0
-	%ifctx __finishcallc
-		%pop
-	%else
-		%ifctx __hack
-			add esp, (%$argcount * 4)
-			pop esi
-			pop eax
-			pop edx
-			pop ecx
-		%endif
-	%endif
+    %ifctx __finishcallc
+        %pop
+    %else
+        %ifctx __hack
+            add esp, (%$argcount * 4)
+            pop esi
+            pop eax
+            pop edx
+            pop ecx
+        %endif
+    %endif
 
     %ifctx __hack
-		jmp %$end
+        jmp %$end
         @ENDHACK
         %ifctx __callc
             %pop

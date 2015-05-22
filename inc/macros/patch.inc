@@ -74,3 +74,22 @@
     dd (%2) - (%1) - 5          ; relative offset
     @ENDPATCH
 %endmacro
+
+%macro hack 1
+    @LJMP {(%1)}, dest%1
+    [section .text]
+    align 16, db 0xCC
+    dest%1:
+%endmacro
+
+%macro hack 2
+    %if %2 - ((%1) + 5) < 0
+        %error "end must be at least 5 bytes (the size of a long jump) after start"
+    %endif
+
+    @CLEAR {(%1) + 5}, 0xCC, {(%2)}
+    @LJMP {(%1)}, dest%1
+    [section .text]
+    align 16, db 0xCC
+    dest%1:
+%endmacro
