@@ -1,6 +1,8 @@
-{name, version, homepage}:
+{ name, version, homepage }:
 
 let
+  pkgs = import <nixpkgs> {};
+
   windows32 = import <nixpkgs> {
 #    system = "i686-linux"; # local system
     crossSystem = {
@@ -10,20 +12,32 @@ let
       platform = {};
       openssl.system = "mingw";
     };
-  };  
+  };
 
-  game = {lib, stdenv, nasm, petool}: stdenv.mkDerivation rec {
+  petool = pkgs.callPackage (pkgs.fetchFromGitHub {
+    owner = "cnc-patch";
+    repo = "petool";
+    rev = "a7754d0362ff3a8600c859a2dc4c3a9d92bbe586";
+    sha256 = "0qlp79gpn6xfngdmqrpcb8xdv25ady3ww545v7jhcff98g16znjh";
+  }) {};
+
+  game = { lib, stdenv, nasm }: stdenv.mkDerivation rec {
     inherit name;
     inherit version;
 
     nativeBuildInputs = [ nasm petool ];
     src = ./..;
     preBuild = "makeFlagsArray=(" + lib.concatStringsSep " " [
+      # Miscellaneous
       "REV=${version}"
       "CP=cp"
+      # GNU Compiler Collection
       "CC=${stdenv.cross.config}-gcc"
+      "CXX=${stdenv.cross.config}-g++"
+      # GNU Binutils
       "AS=${stdenv.cross.config}-as"
       "WINDRES=${stdenv.cross.config}-windres"
+      "LD=${stdenv.cross.config}-ld"
     ] + ")";
 
     enableParallelBuilding = true;
