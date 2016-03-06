@@ -97,7 +97,7 @@
 
 %macro @FINISHCALLC 0
     %ifctx __hack
-        
+
         %ifctx __finishcallc
             %error "can't nest finishcallcs"
         %else
@@ -106,7 +106,7 @@
             pop eax
             pop edx
             pop ecx
-            
+
             %push __finishcallc
         %endif
     %else
@@ -139,4 +139,3 @@
         %error "no corrosponding `@CALLC'"
     %endif
 %endmacro
-
