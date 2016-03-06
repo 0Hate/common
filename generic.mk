@@ -17,7 +17,6 @@ PETOOL      ?= petool
 REVFLAG     ?= -DREV=\"$(REV)\"
 
 CC_COMMON   ?= $(REVFLAG) $(INCLUDES) -m32 -Wall -Wextra
-
 ifdef DEBUG
 CC_COMMON   += -g
 else
@@ -28,14 +27,17 @@ CFLAGS      ?= $(CC_COMMON) -std=gnu99 -masm=intel
 CXXFLAGS    ?= $(CC_COMMON) -std=gnu++98 -target i686-pc-win32 -mllvm --x86-asm-syntax=intel
 WFLAGS      ?= $(REVFLAG)
 NFLAGS      ?= $(REVFLAG) $(INCLUDES) -f elf
+
 LD_COMMON   ?= $(CFLAGS) \
 		-Wl,-mi386pe \
 		-Wl,--enable-stdcall-fixup \
-		-Wl,--allow-multiple-definition \
 		-Wl,--subsystem=windows
+ifdef DEBUG
+LD_COMMON   += -Wl,--strip-all -Wl,--exclude-all-symbols
+endif
 
 LDFLAGS     ?= $(LD_COMMON) -Wl,--file-alignment=$(ALIGNMENT) -nostdlib
-DLL_LDFLAGS ?= $(LD_COMMON) -s -shared -Wl,--strip-all -Wl,--exclude-all-symbols
+DLL_LDFLAGS ?= $(LD_COMMON) -s -shared
 
 
 .$(GAME).exe: $(LSCRIPT) $(INBIN) $(OBJS)
