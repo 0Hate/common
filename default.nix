@@ -1,9 +1,4 @@
-/*let
-  pkgs = import <nixpkgs> { };
-
-in */
-import <nixpkgs> {
-  #system = "i686-linux"; # local system
+let
   crossSystem = {
     config = "i686-w64-mingw32";
     arch = "x86";
@@ -11,6 +6,8 @@ import <nixpkgs> {
     platform = {};
     openssl.system = "mingw";
   };
+in import <nixpkgs> {
+  inherit crossSystem;
   config = {
     packageOverrides = super: let self = super.pkgs; in {
       petool = self.callPackage (self.fetchFromGitHub {
@@ -20,7 +17,10 @@ import <nixpkgs> {
         sha256 = "0qlp79gpn6xfngdmqrpcb8xdv25ady3ww545v7jhcff98g16znjh";
       }) {};
       mkCncGame = self.callPackage ./template.nix {};
-      binutilsCross = self.callPackage ./binutils { noSysDirs = true; };
+      binutilsCross = self.callPackage ./binutils {
+        noSysDirs = true;
+        cross = crossSystem;
+      };
     };
   };
 }
