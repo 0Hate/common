@@ -54,6 +54,14 @@
     @ENDPATCH
 %endmacro
 
+%macro @CLEAR_INT 2
+    @CLEAR %1, 0xCC, %2
+%endmacro
+
+%macro @CLEAR_NOP 2
+    @CLEAR %1, 0x90, %2
+%endmacro
+
 %macro @SJMP 2
     @PATCH (%1)
     db 0xEB                     ; short jump
@@ -76,13 +84,17 @@
 %endmacro
 
 %macro hack 1
+    global dest%1 ; Make it global to prevent bugs where 2 hacks were placed on the same location
+    %define hackend (%1 + 5)
     @LJMP {(%1)}, dest%1
     [section .text]
-    align 16, db 0xCC
+    align 32, db 0xCC
     dest%1:
 %endmacro
 
 %macro hack 2
+    global dest%1 ; Make it global to prevent bugs where 2 hacks were placed on the same location
+    %define hackend %2
     %if %2 - ((%1) + 5) < 0
         %error "end must be at least 5 bytes (the size of a long jump) after start"
     %endif
@@ -90,6 +102,6 @@
     @CLEAR {(%1) + 5}, 0xCC, {(%2)}
     @LJMP {(%1)}, dest%1
     [section .text]
-    align 16, db 0xCC
+    align 32, db 0xCC
     dest%1:
 %endmacro
