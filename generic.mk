@@ -31,12 +31,13 @@ NFLAGS      ?= $(REVFLAG) $(INCLUDES) -f elf
 LD_COMMON   ?= $(CFLAGS) \
 		-Wl,-mi386pe \
 		-Wl,--enable-stdcall-fixup \
-		-Wl,--subsystem=windows
+		-Wl,--subsystem=windows \
+		-Wl,--section-alignment=$(VIRT_ALIGNMENT)
 ifdef DEBUG
 LD_COMMON   += -Wl,--strip-all -Wl,--exclude-all-symbols
 endif
 
-LDFLAGS     ?= $(LD_COMMON) -Wl,--file-alignment=$(ALIGNMENT) -nostdlib
+LDFLAGS     ?= $(LD_COMMON) -Wl,--file-alignment=$(PHYS_ALIGNMENT) -nostdlib
 DLL_LDFLAGS ?= $(LD_COMMON) -s -shared
 
 
