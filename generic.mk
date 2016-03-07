@@ -33,7 +33,7 @@ LD_COMMON   ?= $(CFLAGS) \
 		-Wl,--enable-stdcall-fixup \
 		-Wl,--subsystem=windows \
 		-Wl,--section-alignment=$(VIRT_ALIGNMENT)
-ifdef DEBUG
+ifndef DEBUG
 LD_COMMON   += -Wl,--strip-all -Wl,--exclude-all-symbols
 endif
 
