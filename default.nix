@@ -17,10 +17,6 @@ in import <nixpkgs> {
         sha256 = "0qlp79gpn6xfngdmqrpcb8xdv25ady3ww545v7jhcff98g16znjh";
       }) {};
       mkCncGame = self.callPackage ./template.nix {};
-      binutilsCross = self.callPackage ./binutils {
-        noSysDirs = true;
-        cross = crossSystem;
-      };
     };
   };
 }
