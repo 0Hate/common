@@ -13,8 +13,8 @@ in import <nixpkgs> {
       petool = self.callPackage (self.fetchFromGitHub {
         owner = "cnc-patch";
         repo = "petool";
-        rev = "a7754d0362ff3a8600c859a2dc4c3a9d92bbe586";
-        sha256 = "0qlp79gpn6xfngdmqrpcb8xdv25ady3ww545v7jhcff98g16znjh";
+        rev = "f0231058829dcb34f04d0e427b464371a44f8522";
+        sha256 = "0qjf4bzj52j6sw4rl7nndkz335k1vjgfd13lrqwihsjhicbyj71m";
       }) {};
       mkCncGame = self.callPackage ./template.nix {};
     };
